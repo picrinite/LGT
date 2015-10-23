@@ -5,12 +5,11 @@ using namespace std;
 // Divide unknown reads after tophat into
 // PairedUnknown & Single Unknown
 
-// length of >DGGXHXP1:425:C4DNJACXX:1:  is 26
-const int prefix_len = 26; 
+// @ titleA and titleB are ended with _1 or _2
 bool compare ( string &titleA, string &titleB ){
 	int i;
 	char ch_A, ch_B;
-	i = prefix_len;
+	i = 0;
 	ch_A = titleA[ i ];
 	ch_B = titleB[ i ];
 	while( ch_A != '_' || ch_B != '_' ){
