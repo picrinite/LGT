@@ -1,26 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Util.h"
 using namespace std;
 // Divide unknown reads after tophat into
 // PairedUnknown & Single Unknown
 
-// @ titleA and titleB are ended with _1 or _2
-bool compare ( string &titleA, string &titleB ){
-	int i;
-	char ch_A, ch_B;
-	i = 0;
-	ch_A = titleA[ i ];
-	ch_B = titleB[ i ];
-	while( ch_A != '_' || ch_B != '_' ){
-		if( ch_A != ch_B )
-			return false;
-		++i;
-		ch_A = titleA[ i ];
-		ch_B = titleB[ i ];
-	}
-	return true;
-}
 
 void modify( char *input, char* barcode ){
 	string titleA,seqA,titleB,seqB;
