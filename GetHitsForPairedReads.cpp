@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include "Utils.h"
 using namespace std;
 
 
 unordered_set<string> stReads;
+unordered_map<string, string> mpParameters;
 
 void buildSet(unordered_set<string> & my_set, string fileName){
 	ifstream fin(fileName);
@@ -45,9 +47,11 @@ int getHit(string inputFileHost, string outputFile){
 //  (1) find its paired host read identified by Tophat 
 
 // g++ -std=c++0x -o GetHitsForPairedReads GetHitsForPairedReads.cpp
-// ../GetTophatHit
+// ../GetHitsForPairedReads 
 int main(int argc, char *argv[]){
-	buildSet(stReads, "MicrobeNotEnv_Category.txt");
+	initParameters(argv[1], mpParameters);
+
+	buildSet(stReads, mpParameters["reads_tobe_loaded_into_database"] );
 
 	getHit("SingleHost.sam", "PairedHostTophat.txt");
 	getHit("SingleUnknownBlastHit.txt", "PairedBlast.txt");

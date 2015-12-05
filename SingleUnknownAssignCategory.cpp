@@ -12,44 +12,13 @@
 using namespace std;
 
 
-//   query id, subject id, subject tax ids, % identity, alignment length, mismatches, evalue, bit score, subject title, s. start, s. end, subject seq
 
-//MG00HS08:584:C5YUBACXX:6:1101:1238:13451_2:N:0:CAGATC   gi|704366570|gb|KM224290.1|     9606    99.01   101     1       4e-43    183    Homo sapiens isolate FRT66 12S ribosomal RNA gene, partial sequence; mitochondrial      125     225     CTAAAACTCACCTGAGTTGTAAAAAACTCCAGTTGACACAAAATAGACTACGAAAGTGGCTTTAACATATCTGAACACACAATAGCTAAGACCCAAACTGG
-
-const int QUERY_ID = 0;
-const int SUBJECT_ID = 1;
-const int SUBJECT_TAX_ID = 2;
-const int PERCENT_IDENTITY = 3;
-const int ALIGNMENT_LENGTH = 4;
-const int MISMATCH = 5;
-const int EVALUE = 6;
-const int BIT_SCORE = 7;
-const int SUBJECT_TITLE = 8;
-const int START = 9;
-const int END = 10;
 const int NUM_BLAST_HITS = 150;
-
-//int countReadsNotComplete = 0; // reads with at least 150 best hits
-//int countNotCompleteWithoutBac = 0;  // human reads that don't complete
-//int countNotCompleteWithBac = 0;  // bac reads that don't complete
-int COUNT[ NUM_BLAST_HITS ] ;
 
 unordered_map<string, string>  mpParameters;   // load parameters in parameters.txt file 
 unordered_set<string> stCloseHost, stMicrobeNotEnv, stEnvNotMicrobe, stMicrobeAndEnv;    //list of tax id for different categories
 vector<string> vecCategory(64, "Mixture");
 
-void initParameters(char * file_parameters){
-	ifstream fin(file_parameters);
-	string sLine;
-	while(getline(fin, sLine)){
-		if( sLine.back() == '\r' )
-			sLine.pop_back();
-		int pos = sLine.find_first_of('=');
-		if(pos != string::npos)
-			mpParameters[sLine.substr(0, pos)] = sLine.substr(pos + 1);
-	}
-	fin.close();
-}
 
 void setCategory(vector<string> &vecCategory, string assign_category_file){
 	ifstream fin(assign_category_file);
@@ -175,7 +144,7 @@ void modify( char *inputFile ){
 int main(int argc, char *argv[]){
 
 
-	initParameters(argv[1]);
+	initParameters(argv[1], mpParameters);
 
 	setCategory(vecCategory, mpParameters["assign_blast_category"]);
 
@@ -186,24 +155,6 @@ int main(int argc, char *argv[]){
 
 	modify( argv[2] );
 
-	/*
-
-	for( int i = 0; i < 15; ++i ){
-		for( int j = 0; j < 10; ++j ){
-			out_result << COUNT[ i * 10 + j ] << "\t" ;
-			cout << COUNT[ i * 10 + j ] << "\t" ;
-		}
-		out_result << endl ;
-	}
-
-	cout << endl << "incomplete_reads size is :  " << incomplete_reads_set.size() << endl;
-	//out_result << "num of read with at least 150 hits from human : " << countNotCompleteWithoutBac  << endl;
-	out_result << "num of read with 150 best hits including bac or env : " << countNotCompleteWithBac << endl;
-	//cout << "num of read with at least 150 hits from human : " << countNotCompleteWithoutBac  << endl;
-	cout << "num of read with 150 best hits including bac or env : " << countNotCompleteWithBac << endl;
-	out_result.close();
-	out_incomplete.close();
-	*/
 	return 0;
 }
 

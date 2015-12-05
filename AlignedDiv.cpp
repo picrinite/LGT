@@ -84,6 +84,7 @@ void modify( char *input, char* barcode ){
 }
 
 // first argument is mapped_sorted.sam  , argv[2] is barcode
+//  g++ -std=c++0x -o AlignedDiv AlignedDiv.cpp
 int main(int argc, char *argv[]){  
 	//string inputFileName( "sample.txt" );
 	modify( argv[1], argv[2] );

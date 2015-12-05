@@ -1,11 +1,27 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Util.h"
 using namespace std;
 // Divide unknown reads after tophat into
 // PairedUnknown & Single Unknown
 
+// length of >DGGXHXP1:425:C4DNJACXX:1:  is 26
+const int prefix_len = 26; 
+bool compare ( string &titleA, string &titleB ){
+	int i;
+	char ch_A, ch_B;
+	i = prefix_len;
+	ch_A = titleA[ i ];
+	ch_B = titleB[ i ];
+	while( ch_A != '_' || ch_B != '_' ){
+		if( ch_A != ch_B )
+			return false;
+		++i;
+		ch_A = titleA[ i ];
+		ch_B = titleB[ i ];
+	}
+	return true;
+}
 
 void modify( char *input, char* barcode ){
 	string titleA,seqA,titleB,seqB;
@@ -51,6 +67,7 @@ void modify( char *input, char* barcode ){
 		outSingle << titleA << endl << seqA << endl;
 }
 // argument  argv[1] is unmapped_sorted.fasta  , argv[2] is barcode
+// g++ -std=c++0x -o UnknownDiv UnknownDiv.cpp
 int main(int argc, char *argv[]){
 	//string inputFileName( "sample.txt" );
 	modify( argv[1], argv[2] );
