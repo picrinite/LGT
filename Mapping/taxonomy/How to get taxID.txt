@@ -1,0 +1,25 @@
+Go to http://www.ncbi.nlm.nih.gov/. Select "Taxonomy" in the drop-down menu.
+  Search term: "bacteria"[subtree] NOT "environmental samples"[subtree]
+
+
+Results: 342959  hits on 4/9/2015
+
+Results:  370386 hits on Nov, 2015
+
+
+## A) Download taxIDs of bacteria FROM environmental samples
+##Note: These may or may not be bacteria
+##Go to http://www.ncbi.nlm.nih.gov/. Select "Taxonomy" in the drop-down menu.
+##Search term: "bacteria"[subtree] AND "environmental samples"[subtree]
+
+Results: 41240 hits on 4/13/2015
+
+##Note: These are ambiguous.
+##Go to http://www.ncbi.nlm.nih.gov/. Select "Taxonomy" in the drop-down menu.
+##Search term: "environmental samples"[subtree]
+## (You should get approximately 52765 hits)
+##Save file as (eg): taxid_env.txt
+
+
+
+Results: 53082 hits on 4/13/2015

@@ -1,0 +1,16 @@
+./GetBestMicrobeHits CGATGT_SingleUnknown.fasta.blastout.mixDB all_bac_taxID.txt taxonomy_environmental.txt taxonomy_bac_and_environmental.txt
+
+./GetSplicedHost CGATGT_SingleHost.sam PHostUMicrobe_high_confidence.fasta.blastout UMicrobePHost.sam
+./GetSplicedHost CGATGT_SingleHost.sam PHostUMicrobe_low_confidence.fasta.blastout UMicrobePHost.sam
+
+
+awk '!x[$1]++' UMicrobePHost.sam > UMicrobePHost_Unique.sam 
+
+cat UMicrobePHost_Unique.sam  | awk '{OFS="\t"; print ">"$1"\n"$10}' - > UMicrobePHost.fasta
+
+./GetBestHitsWithMicrobe UMicrobePHost.fasta.blastout UMicrobeNUHost.blastout all_bac_taxID.txt
+
+./RemoveFalsePositive UMicrobePHost.sam PHostUMicrobe_low_confidence.fasta.blastout UMicrobeNUHost.blastout UMicrobeUHost.sam UHostUMicrobe.blastout
+
+./GeneAnno ../mouse.gtf UMicrobeUHost.sam CGATGT
+
