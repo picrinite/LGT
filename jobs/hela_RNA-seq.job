@@ -1,0 +1,56 @@
+#!/bin/bash
+#calibrate pipeline using HeLa cell data in Fig. 2(C) of PathSeq paper
+# ftp://ftp.broadinstitute.org/outgoing/Pathseq_public/data/HeLa_QF_readset.fastq
+
+HOME=/bigdata/jianglab/xzhan018
+HELA_DATA=${HOME}/tophat/human_data/hela
+HISATINDEXBASE=${HOME}/tophat/human_hisat/hs_GRCh38
+RAWBASENAME=HeLa_QF_readset
+MAINLINE=/rhome/xzhan018/LGT/script/pipeline/
+
+cd ${HELA_DATA}
+
+# sort fastq file
+if [ ! -f "HeLa_QF_readset_sort.fastq" ]
+  then
+    cat ${RAWBASENAME}.fastq | paste - - - - | sort -k1,1 | tr "\t" "\n" > HeLa_QF_readset_sort.fastq
+fi
+
+# remove unpaired read
+if [ ! -f "HeLa_QF_readset_1.fastq" ]
+  then
+    cat  HeLa_QF_readset_sort.fastq | paste - - - - | sed "s/#0\//_ /" | awk '{$(NF+1)=$1;$1="";}1'| \
+         uniq -D -f4 | awk '{$1=$NF$1}NF{--NF}1' | split -n r/2 - HeLa_QF_readset_one_end.fastq
+    cat HeLa_QF_readset_one_end.fastqaa | tr " " "\n" > ${RAWBASENAME}_1.fastq
+    cat HeLa_QF_readset_one_end.fastqab | tr " " "\n" > ${RAWBASENAME}_2.fastq
+    rm -f HeLa_QF_readset_one_end.fastqa?   
+fi
+
+if [ ! -f "${RAWBASENAME}_hisat_output_-1.sam" ]
+  then  
+    echo "execute hisat"
+    module load hisat2
+    #hisat2 --score-min=L,0,-1 -q --un ./ --al ./ -x ${HISATINDEXBASE} -1  ${HELA_DATA}/${RAWBASENAME}_1.fastq -2  ${HELA_DATA}/${RAWBASENAME}_2.fastq  -S ${RAWBASENAME}_hisat_output_-1.sam
+fi
+
+cd ${MAINLINE}
+cd bin
+if [ ! -f "SingleUnknown.fasta" ]
+  then 
+    ./ParseHisatSam ../parameters_hela.txt
+fi
+
+module load ncbi-blast
+module load db-ncbi
+FILENAME=SingleUnknown
+FILENAME2=PairedUnknown
+EVAL=0.01
+MAXSEQS=50
+CPUs=25
+#MAXHSPS=5
+OPTS="qseqid sseqid staxids pident length mismatch evalue bitscore stitle sstart send sseq"
+
+#blastn -db  ${HOME}/blast/mix_nt_bac_human_db/mix_nt_bac_human_filtered_db -query ${FILENAME}.fasta -out ${FILENAME}.fasta.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
+#ncbi_db
+#blastn -db $NCBI_DB/nt -query ${FILENAME}.fasta -out ${FILENAME}.fasta.ncbi_nt.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
+blastn -db $NCBI_DB/nt -query ${FILENAME2}.fasta -out ${FILENAME2}.fasta.ncbi_nt.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
