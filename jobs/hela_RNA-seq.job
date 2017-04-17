@@ -40,7 +40,7 @@ if [ ! -f "SingleUnknown.fasta" ]
     ./ParseHisatSam ../parameters_hela.txt
 fi
 
-module load ncbi-blast
+module load ncbi-blast/2.6.0+
 module load db-ncbi
 FILENAME=SingleUnknown
 FILENAME2=PairedUnknown
@@ -50,7 +50,5 @@ CPUs=25
 #MAXHSPS=5
 OPTS="qseqid sseqid staxids pident length mismatch evalue bitscore stitle sstart send sseq"
 
-#blastn -db  ${HOME}/blast/mix_nt_bac_human_db/mix_nt_bac_human_filtered_db -query ${FILENAME}.fasta -out ${FILENAME}.fasta.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
-#ncbi_db
-#blastn -db $NCBI_DB/nt -query ${FILENAME}.fasta -out ${FILENAME}.fasta.ncbi_nt.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
-blastn -db $NCBI_DB/nt -query ${FILENAME2}.fasta -out ${FILENAME2}.fasta.ncbi_nt.blastout  -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
+#custom_mix_db_no_max_seqs
+blastn -db  ${HOME}/blast/mix_nt_bac_human_hpv_db/mix_nt_bac_human_hpv_db -query ${FILENAME}.fasta -out ${FILENAME}.fasta.blastout -max_target_seqs $MAXSEQS -evalue $EVAL -num_threads $CPUs -outfmt "7 $OPTS"
